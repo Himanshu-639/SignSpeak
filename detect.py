@@ -12,7 +12,7 @@ import io
 
 # ------------------ Page Configuration ------------------
 st.set_page_config(
-    page_title="YOLOv8 + Gemini 👁️‍🗨️",
+    page_title="SignSpeak",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -22,8 +22,8 @@ st.set_page_config(
 GEMINI_API_KEY = "AIzaSyC8DYC83s8v5CyIJm4Sq3lxZJefCKNeKSQ"
 MODEL_PATH = "my_model.pt"
 
-st.title("Object Detection and OCR with YOLOv8 & Gemini 🤖")
-st.write("This app uses a pre-configured model and API key. Select a source and click 'Start Processing' to begin.")
+st.title("SignSpeak")
+st.write("This app uses a finetuned model and API key. Select a source and click 'Start Processing' to begin.")
 
 # ------------------ Sidebar for Inputs ------------------
 st.sidebar.header("⚙️ Your Configuration")
@@ -121,16 +121,16 @@ if start_button:
     if source_choice == "Image" and source_file:
         image = Image.open(source_file)
         frame = np.array(image)
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB_BGR)
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
         processed_frame, obj_count, cropped_images = process_and_display(yolo_model, frame, confidence_thresh)
         
-        st.subheader(f"🖼️ Processed Image (Detected {obj_count} objects)")
+        st.subheader(f"Processed Image (Detected {obj_count} objects)")
         st.image(processed_frame, channels="BGR", width='stretch')
 
         # --- OCR and TTS Section ---
         if cropped_images:
-            st.subheader("🔍 Text Recognition (OCR)")
+            st.subheader("Text Recognition (OCR)")
             all_text = ""
             with st.spinner("Gemini is reading the detected objects..."):
                 for i, img in enumerate(cropped_images):
@@ -145,7 +145,7 @@ if start_button:
                         st.error(f"Error during OCR for object {i+1}: {e}")
             
             if all_text.strip():
-                st.subheader("🗣️ Text-to-Speech")
+                st.subheader("Text-to-Speech")
                 with st.spinner("Generating audio..."):
                     try:
                         tts = gTTS(all_text)
@@ -172,14 +172,14 @@ if start_button:
                 video_path = tfile.name
                 cap = cv2.VideoCapture(video_path)
 
-        st.subheader("🎥 Video Stream")
+        st.subheader("Video Stream")
         frame_placeholder = st.empty()
         info_placeholder = st.empty()
         stop_button = st.button("⏹️ Stop Processing")
         
         frame_count = 0
-        OCR_INTERVAL = 90  # OCR every 90 frames
-        last_spoken_text = "" # <-- Variable to store the last spoken text
+        OCR_INTERVAL = 90
+        last_spoken_text = ""
         
         while cap.isOpened() and not stop_button:
             ret, frame = cap.read()
@@ -199,7 +199,7 @@ if start_button:
             # --- Controlled OCR + TTS ---
             frame_count += 1
             if frame_count % OCR_INTERVAL == 0 and cropped_images:
-                st.subheader("🔍 Text Recognition (OCR) - Frame Update")
+                st.subheader("Text Recognition (OCR)")
                 all_text = ""
                 with st.spinner(f"Gemini is reading frame {frame_count}..."):
                     for i, img in enumerate(cropped_images):
@@ -217,7 +217,7 @@ if start_button:
                 # Only generate audio if the new text is different from the last one
                 current_text = all_text.strip()
                 if current_text and current_text != last_spoken_text:
-                    st.subheader("🗣️ Text-to-Speech - Frame Update")
+                    st.subheader("Text-to-Speech")
                     with st.spinner("Generating new audio..."):
                         try:
                             tts = gTTS(current_text)
