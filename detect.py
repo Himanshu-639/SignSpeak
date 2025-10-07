@@ -178,7 +178,7 @@ if start_button:
         stop_button = st.button("⏹️ Stop Processing")
         
         frame_count = 0
-        OCR_INTERVAL = 90
+        OCR_INTERVAL = 60
         last_spoken_text = ""
         
         while cap.isOpened() and not stop_button:
