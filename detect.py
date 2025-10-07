@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 # --- Hardcoded Values ---
-GEMINI_API_KEY = "AIzaSyC8DYC83s8v5CyIJm4Sq3lxZJefCKNeKSQ"
+GEMINI_API_KEY = "AIzaSyAuXH3ZFRjIwl1elx9XGhZAFRmF3VhA2uQ"
 MODEL_PATH = "my_model.pt"
 
 st.title("SignSpeak")
